@@ -1,3 +1,6 @@
 [submodule "domidomi-secret"]
 	path = domidomi-secret
 	url = https://github.com/vact19/domidomi-secret/
+[submodule "domidomi-secret/domidomi-secret"]
+	path = domidomi-secret/domidomi-secret
+	url = https://github.com/vact19/domidomi-secret.git
