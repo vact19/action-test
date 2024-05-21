@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.13'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.dominest'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '11'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // core
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // data
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+
+    //auth
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // tools
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+
+
+    // other
+    implementation 'org.apache.poi:poi-ooxml:5.2.2' // ooxml 이어야 xlsx(2007 이후 확장자) 파일을 읽을 수 있음.
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.0.0'
+
+
+    //test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+processResources.dependsOn('copySecret')
+processResources.dependsOn('copyTestSecretAndRename')
+
+tasks.register('copySecret', Copy) {
+    from './domidomi-secret' // 서브모듈 디렉토리 경로
+    include "application*.yml"  // 복사할 파일들
+    exclude "application-test.yml" // application-test.yml 파일 제외
+    include "schema.sql"
+    include "domi-backup-time.bat"
+    into 'src/main/resources'  // 복사 위치
+}
+
+tasks.register('copyTestSecretAndRename', Copy) {
+    from './domidomi-secret' // 서브모듈 디렉토리 경로
+    include "application-test.yml"  // 복사할 파일 지정
+    into 'src/test/resources' // 복사 위치 지정
+
+    rename { String fileName ->
+        fileName.replace('application-test.yml', 'application.yml') // 파일 이름 변경
+    }
+}
