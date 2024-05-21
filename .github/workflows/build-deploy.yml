@@ -28,11 +28,12 @@ jobs:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-    - uses: appleboy/ssh-action@master
+    - uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        command_timeout: 3m
         script: |
           cd domiapp-refactor
           ./deploy.sh
