@@ -62,9 +62,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-processResources.dependsOn('copySecret')
-processResources.dependsOn('copyTestSecretAndRename')
-
 tasks.register('copySecret', Copy) {
     from './domidomi-secret' // 서브모듈 디렉토리 경로
     include "application*.yml"  // 복사할 파일들
@@ -83,3 +80,9 @@ tasks.register('copyTestSecretAndRename', Copy) {
         fileName.replace('application-test.yml', 'application.yml') // 파일 이름 변경
     }
 }
+tasks.named("processResources").configure {
+    dependsOn("copySecret")
+    dependsOn("copyTestSecretAndRename")
+}
+processResources.dependsOn('copySecret')
+processResources.dependsOn('copyTestSecretAndRename')

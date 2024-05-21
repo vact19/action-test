@@ -48,7 +48,7 @@ class DatePatternParserTest {
         LocalDate result = DatePatternParser.parseyyMMddToLocalDate(baseYear, yyMMdd);
 
         // then
-        assertThat(result).isEqualTo(LocalDate.of(2020, 1, 1));
+        assertThat(result).isEqualTo(LocalDate.of(2021, 1, 1));
     }
 
     @DisplayName("파라미터의 패턴이 yyMMdd 형식이 아닐 경우 예외 발생")
