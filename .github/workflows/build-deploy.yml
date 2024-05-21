@@ -35,5 +35,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         command_timeout: 3m
         script: |
-          cd domiapp-refactor
-          ./deploy.sh
+          whoami
+          # cd domiapp-refactor
+          # ./deploy.sh
